@@ -1,11 +1,10 @@
 package com.example.myapplication;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -19,14 +18,11 @@ import com.google.firebase.database.ValueEventListener;
 
 import android.os.CountDownTimer;
 
-
-import androidx.appcompat.app.AppCompatActivity;
-
-import java.security.spec.RSAOtherPrimeInfo;
-public class ex1 extends AppCompatActivity {
-
+public class ex2_makbilitt extends AppCompatActivity {
     private DatabaseReference alpha0;
     private DatabaseReference alpha1;
+    private DatabaseReference alpha2;
+    private DatabaseReference alpha3;
     private  DatabaseReference highest;
     private TextView timerTextView;
     private TextView generalText;
@@ -36,25 +32,31 @@ public class ex1 extends AppCompatActivity {
     private Button home;
 
     private CountDownTimer countDownTimer;
-    private long timeLeftInMillis = settings.timeMs; // 60 seconds
+    private long timeLeftInMillis = 60000; // 60 seconds
     private int cnt = 0;
-    private int time = 0;
     private double alpha_angle0 = 0;
     private double alpha_angle1 = 0;
+    private double alpha_angle2 = 0;
+    private double alpha_angle3 = 0;
+
+
     private double differential_angle = 0;
+    private double iidifferential_angle = 0;
+    double iiPerpendicular = 0;
+
     double Perpendicular = 0;
     private boolean timerRunning = false;
     private boolean complete_movement = true;
 
-    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_ex1);
-
+        setContentView(R.layout.activity_ex2_makbilitt);
         getSupportActionBar().hide(); // hide the title bar
         alpha0 = FirebaseDatabase.getInstance().getReference().child("/alpha00");
         alpha1 = FirebaseDatabase.getInstance().getReference().child("/alpha01");
+        alpha2 = FirebaseDatabase.getInstance().getReference().child("/alpha02");
+        alpha3 = FirebaseDatabase.getInstance().getReference().child("/alpha03");
         highest = FirebaseDatabase.getInstance().getReference().child("/highest");
 
         generalText = findViewById(R.id.general_text_view);
@@ -67,6 +69,7 @@ public class ex1 extends AppCompatActivity {
 
         // Read from the database
         highest = FirebaseDatabase.getInstance().getReference("highest");
+
         alpha0.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -81,6 +84,7 @@ public class ex1 extends AppCompatActivity {
                 // Failed to read value
             }
         });
+
         alpha1.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -91,10 +95,40 @@ public class ex1 extends AppCompatActivity {
                 if (alpha_angle1 > 180) alpha_angle1 = 360 - alpha_angle1;
                 differential_angle = 180 - (alpha_angle0+alpha_angle1);
             }  @Override
-        public void onCancelled(DatabaseError error) {
-            // Failed to read value
-        }
-    });
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+            }
+        });
+
+        alpha2.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // This method is called once with the initial value and again
+                // whenever data at this location is updated.
+                String value = dataSnapshot.getValue(String.class);
+                alpha_angle2 = Double.valueOf(value);
+                if (alpha_angle2 > 180) alpha_angle2 = 360 - alpha_angle2;
+            }  @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+            }
+        });
+
+        alpha3.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // This method is called once with the initial value and again
+                // whenever data at this location is updated.
+                String value = dataSnapshot.getValue(String.class);
+                alpha_angle3 = Double.valueOf(value);
+                if (alpha_angle3 > 180) alpha_angle3 = 360 - alpha_angle3;
+                iidifferential_angle = 180 - (alpha_angle3+alpha_angle2);
+            }  @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+            }
+        });
+
         home.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -103,11 +137,13 @@ public class ex1 extends AppCompatActivity {
             }
 
             public void home() {
+
                 Intent intent;
-                intent = new Intent(ex1.this, MainActivity.class);
+                intent = new Intent(ex2_makbilitt.this, MainActivity.class);
                 startActivities(new Intent[]{intent});
             }
         });
+
 
         startStopButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -165,7 +201,7 @@ public class ex1 extends AppCompatActivity {
     }
 
     private void resetTimer() {
-        timeLeftInMillis = settings.timeMs;
+        timeLeftInMillis = 60000;
         updateTimer();
         //    resetButton.setVisibility(View.INVISIBLE);
     }
@@ -175,16 +211,20 @@ public class ex1 extends AppCompatActivity {
         String timeLeftFormatted = String.format("%02d", seconds);
         timerTextView.setText(timeLeftFormatted + " sec.");
 
-        generalText.setText("\ndifferential_angle:" + Math.abs(differential_angle) +"\n cnt: "+ cnt +"\nPerpendicular"+ Perpendicular);
+        generalText.setText("\ndifferential_angle:" + Math.abs(differential_angle) +"\n cnt: "+ cnt +"\n\n ii:"+ iidifferential_angle);
 
         Perpendicular = Math.sqrt(Math.pow(20, 2) + Math.pow(40, 2) - 20 * 40 * Math.cos(Math.abs(differential_angle)));
         Perpendicular = Math.round(Perpendicular);
-        if (Perpendicular < 40 && Perpendicular > 0 && complete_movement == true)
+
+        iiPerpendicular = Math.sqrt(Math.pow(20, 2) + Math.pow(40, 2) - 20 * 40 * Math.cos(Math.abs(iiPerpendicular)));
+        iiPerpendicular = Math.round(iiPerpendicular);
+
+        if (Perpendicular < 40 && Perpendicular > 0 && iiPerpendicular < 40 && iiPerpendicular > 0 &&  complete_movement == true)
         {complete_movement = false; ++cnt;}
-        else if (Perpendicular > 40 && Perpendicular < 60 && complete_movement == false) {
+        else if (Perpendicular > 40 && Perpendicular < 60 && iiPerpendicular < 40 && iiPerpendicular > 0 &&  complete_movement == false) {
             complete_movement = true;
         }
     }
 
-}
 
+}

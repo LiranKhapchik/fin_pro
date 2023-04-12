@@ -13,28 +13,28 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="88dp"
         android:backgroundTint="#673AB7"
-        android:text="zero"
+        android:text="settings"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/button"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.704" />
+        app:layout_constraintVertical_bias="0.935" />
 
     <TextView
         android:id="@+id/b"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Last count was"
+        android:text="Highest count was"
         android:textColor="#FFFFFF"
         android:textSize="34sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.39"
+        app:layout_constraintHorizontal_bias="0.225"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.584" />
+        app:layout_constraintVertical_bias="0.537" />
 
     <Button
         android:id="@+id/button"
@@ -44,10 +44,10 @@
         android:text="+=2"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.809"
+        app:layout_constraintHorizontal_bias="0.78"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/b"
-        app:layout_constraintVertical_bias="0.147" />
+        app:layout_constraintVertical_bias="0.814" />
 
     <HorizontalScrollView
         android:layout_width="409dp"
@@ -70,6 +70,15 @@
                 android:layout_width = "250dp"
                 android:layout_height= "250dp"
                 android:layout_margin="15dp" />
+
+            <ImageButton
+                android:id="@+id/makbilitt_Button"
+                android:scaleType="fitXY"
+                android:layout_width="250dp"
+                android:layout_height="250dp"
+                android:layout_weight="1"
+                android:layout_margin="15dp"
+                app:srcCompat="@drawable/makbili" />
 
             <ImageButton
                 android:id="@+id/imgbpu"
